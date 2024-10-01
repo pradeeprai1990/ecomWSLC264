@@ -10,8 +10,7 @@ export default function page() {
   let [subCat, setSubCat] = useState([]);
   const [thumbnailPre, setThumbnailPrel] = useState(null);
   const [galleryPreview, setGalleryPreview] = useState([]);
-
-
+ 
   let getCaegory = () => {
     axios.get(`http://localhost:8000/admin/product/category`)
       .then((res) => {

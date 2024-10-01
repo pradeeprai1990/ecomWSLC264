@@ -13,9 +13,27 @@ import img4 from "../../img/img4.jpg";
 import s from "../../img/s.png";
 import Link from "next/link";
 import "./login.css";
+import axios from "axios";
 export default function Header() {
   const [modal, setModal] = useState(""); // "" means no modal, "login" means login modal, "signup" means signup modal
 
+  const [registerorotp,setregisterorotp]=useState(false)
+
+  let [registerdata,setRegisterData]=useState({
+    uname:'',
+    uemail:'',
+    upassword:''
+
+  })
+
+
+  let getValueSetValue=(event)=>{
+    let obj={...registerdata}
+    obj[event.target.name]=event.target.value
+    setRegisterData(obj)
+
+
+  }
   // Add/remove body class to prevent scrolling
   useEffect(() => {
     if (modal !== "") {
@@ -32,6 +50,16 @@ export default function Header() {
   const closeModal = () => {
     setModal("");
   };
+
+  let register=(event)=>{
+    console.log(registerdata)
+    axios.post("http://localhost:8000/website/user/register",registerdata)
+    .then((res)=>{
+        setregisterorotp(true)
+    })
+    //regiter api 
+    event.preventDefault()
+  }
 
   return (
     <>
@@ -119,34 +147,69 @@ export default function Header() {
                   <h1 className="text-[30px] font-bold">Create your account</h1>
                   <p>Sign up and enjoy member benefits</p>
                   <Image src={s} className="mt-[10px]" />
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    className="border border-black w-[90%] mt-[15px] p-[10px]"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    className="border border-black w-[90%] mt-[15px] p-[10px]"
-                  />
-                  <input
-                    type="password"
-                    placeholder="password"
-                    className="border border-black w-[90%] mt-[15px] p-[10px]"
-                  />
-                  <ul>
-                    <li className="underline mt-[10px]">
-                      Already have an account?{" "}
-                      <a href="#">
-                        <button onClick={() => openModal("login")}>
-                          Login
+
+                <>
+                {registerorotp 
+                  ?
+                 
+                  <form onSubmit={register}>
+                      <input
+                          type="text"
+                          placeholder="OTP"
+                          name="otp"
+                         
+                          className="border border-black w-[90%] mt-[15px] p-[10px]"
+                        />
+                       
+                       
+                        <button className="bg-black text-white p-[15px] mt-[20px] w-[90%]">
+                         Verfify OTP
                         </button>
-                      </a>
-                    </li>
-                  </ul>
-                  <button className="bg-black text-white p-[15px] mt-[20px] w-[90%]">
-                    Sign Up
-                  </button>
+                  </form>
+                  :
+
+                  <form onSubmit={register}>
+                      <input
+                          type="text"
+                          placeholder="Name"
+                          name="uname"
+                          onChange={getValueSetValue}
+                          className="border border-black w-[90%] mt-[15px] p-[10px]"
+                        />
+                        <input
+                          type="email"
+                          placeholder="Email"
+                          onChange={getValueSetValue}
+                          name="uemail"
+                          className="border border-black w-[90%] mt-[15px] p-[10px]"
+                        />
+                        <input
+                          type="password"
+                          placeholder="password"
+                          onChange={getValueSetValue}
+                          name="upassword"
+                          className="border border-black w-[90%] mt-[15px] p-[10px]"
+                        />
+                        <ul>
+                          <li className="underline mt-[10px]">
+                            Already have an account?{" "}
+                            <a href="#">
+                              <button onClick={() => openModal("login")}>
+                                Login
+                              </button>
+                            </a>
+                          </li>
+                        </ul>
+                        <button className="bg-black text-white p-[15px] mt-[20px] w-[90%]">
+                          Sign Up
+                        </button>
+                  </form>
+                
+                }
+                
+                </>
+              
+                 
                   <div className="flex justify-around">
                     <button className="border-2 border-black p-[8px] mt-[20px] flex justify-between">
                       <CiFacebook /> Sign In With Facebook
