@@ -22,8 +22,8 @@ export default function Header() {
   let [registerdata,setRegisterData]=useState({
     uname:'',
     uemail:'',
-    upassword:''
-
+    upassword:'',
+    otp:''
   })
 
 
@@ -52,15 +52,38 @@ export default function Header() {
   };
 
   let register=(event)=>{
+    event.preventDefault()
     console.log(registerdata)
     axios.post("http://localhost:8000/website/user/register",registerdata)
     .then((res)=>{
         setregisterorotp(true)
     })
     //regiter api 
-    event.preventDefault()
+   
   }
 
+
+  let verifyOTP=(event)=>{
+    event.preventDefault()
+    axios.post("http://localhost:8000/website/user/verify-otp",registerdata)
+    .then((res)=>{
+        console.log(res.data)
+    })
+  }
+
+  let login=(event)=>{
+    event.preventDefault()
+    let obj={
+      userEmail:event.target.userEmail.value,
+      userPassword:event.target.userPassword.value
+    }
+    axios.post("http://localhost:8000/website/user/login",obj)
+    .then((res)=>{
+      if(res.data.status==0){
+        window.alert(res.data.error)
+      }
+    })
+  }
   return (
     <>
       <div className="w-full mt-[20px] flex justify-between border-b-[1px] pb-[15px]">
@@ -104,22 +127,26 @@ export default function Header() {
                 <h1 className="text-[30px] font-bold">Welcome Back</h1>
                 <p>Log in to get access to your member perks.</p>
                 <Image src={s} className="mt-[10px]" />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="border border-black w-[90%] mt-[15px] p-[10px]"
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="border border-black w-[90%] mt-[15px] p-[10px]"
-                />
-                <ul>
-                  <li className="underline mt-[10px]">Forgot Password?</li>
-                </ul>
-                <button className="bg-black text-white p-[15px] mt-[20px] w-[90%]">
-                  Login
-                </button>
+                <form onSubmit={login}>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    name="userEmail"
+                    className="border border-black w-[90%] mt-[15px] p-[10px]"
+                  />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                     name="userPassword"
+                    className="border border-black w-[90%] mt-[15px] p-[10px]"
+                  />
+                  <ul>
+                    <li className="underline mt-[10px]">Forgot Password?</li>
+                  </ul>
+                  <button className="bg-black text-white p-[15px] mt-[20px] w-[90%]">
+                    Login
+                  </button>
+                </form>
                 <div className="flex justify-around mt-[20px]">
                   <button className="border-2 border-black p-[8px] flex items-center">
                     <CiFacebook className="mr-[10px]" /> Sign In With Facebook
@@ -152,12 +179,13 @@ export default function Header() {
                 {registerorotp 
                   ?
                  
-                  <form onSubmit={register}>
+                  <form onSubmit={verifyOTP}>
                       <input
                           type="text"
                           placeholder="OTP"
                           name="otp"
-                         
+                          value={registerdata.otp}
+                          onChange={getValueSetValue}
                           className="border border-black w-[90%] mt-[15px] p-[10px]"
                         />
                        
