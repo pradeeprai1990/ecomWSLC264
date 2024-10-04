@@ -56,7 +56,7 @@ export default function Header() {
     console.log(registerdata)
     axios.post("http://localhost:8000/website/user/register",registerdata)
     .then((res)=>{
-        setregisterorotp(true)
+        setregisterorotp(true) //Check
     })
     //regiter api 
    
