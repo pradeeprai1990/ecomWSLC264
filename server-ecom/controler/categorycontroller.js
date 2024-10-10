@@ -1,4 +1,5 @@
 const { parentcatmodal } = require("../modal/parentcatmodal");
+let slugify = require('slugify')
 let fs = require("fs");
 //add category function
 let addcategory = async (req, res) => {
@@ -8,6 +9,14 @@ let addcategory = async (req, res) => {
     categoryName: req.body.categoryName,
     categoryDes: req.body.categoryDes,
     categoryStatus: req.body.categoryStatus,
+    slug:slugify( req.body.categoryName  , {
+      replacement: '-',  // replace spaces with replacement character, defaults to `-`
+      remove: undefined, // remove characters that match regex, defaults to `undefined`
+      lower: true,      // convert to lower case, defaults to `false`
+      strict: false,     // strip special characters except replacement, defaults to `false`
+      locale: 'vi',      // language code of the locale to use
+      trim: true         // trim leading and trailing replacement chars, defaults to `true`
+    })
   };
   if (req.file != undefined) {
     if (req.filename != "") {
@@ -117,6 +126,7 @@ let updatecategory =async (req,res) =>{
     categoryName: req.body.categoryName,
     categoryStatus: req.body.categoryStatus,
     categoryDes: req.body.categoryDes,
+    slug:slugify(req.body.categoryName,"-")
   };
   if (req.file != undefined) {
     if (req.filename != "") {

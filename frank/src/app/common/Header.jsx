@@ -16,7 +16,7 @@ import "./login.css";
 import axios from "axios";
 export default function Header() {
   const [modal, setModal] = useState(""); // "" means no modal, "login" means login modal, "signup" means signup modal
-
+  let [category,setCategory]=useState([])
   const [registerorotp,setregisterorotp]=useState(false)
 
   let [registerdata,setRegisterData]=useState({
@@ -61,13 +61,22 @@ export default function Header() {
     //regiter api 
    
   }
-
+  let getParentData=()=>{
+    axios.get(`http://localhost:8000/website/product/parent-category`)
+    .then((res)=>{
+      if(res.data.status==1){
+        setCategory(res.data.data)
+      }
+    })
+  }
 
   let verifyOTP=(event)=>{
     event.preventDefault()
     axios.post("http://localhost:8000/website/user/verify-otp",registerdata)
     .then((res)=>{
-        console.log(res.data)
+        if(res.data.status==1){
+          setCategory(res.data.data)
+        }
     })
   }
 
@@ -84,6 +93,10 @@ export default function Header() {
       }
     })
   }
+
+  useEffect(()=>{
+    getParentData()
+  },[])
   return (
     <>
       <div className="w-full mt-[20px] flex justify-between border-b-[1px] pb-[15px]">
@@ -92,6 +105,26 @@ export default function Header() {
             <li className="font-bold text-[20px] mr-[45px] ml-[20px]">
               <a href="/">Frank And Oak</a>
             </li>
+
+          {
+          
+          category.length>=1 ?
+              category.map((items,index)=>{
+                  return(
+                    <li className="font-bold text-[20px] mr-[45px] ml-[20px]">
+                    <Link href={`/category/${items.slug}`}>{items.categoryName}</Link>
+                  </li>
+      
+                  )
+              })
+            :
+
+            ''
+            
+          }
+
+           
+
             {/* Other menu items */}
           </ul>
         </div>

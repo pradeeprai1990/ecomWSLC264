@@ -20,12 +20,12 @@ app.use(route);
 
 
 mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DBNAME}`).then(()=>{
-    app.listen("8000" , async ()=>{
+    app.listen(process.env.ServerPort , async ()=>{
        
         let checkData=await adminModal.find();
         if(checkData.length==0){
             let obj={
-                adminUname:'admin',
+                adminUname:'admin@gmail.com',
                 adminUpassword:'admin123'
             }
             let adminTable=new adminModal(obj)

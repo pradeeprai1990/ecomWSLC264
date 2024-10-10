@@ -14,6 +14,10 @@ let parentcatname = new mongoose.Schema(
         type : String,
         required:false
     },
+    slug:{
+        type : String,
+        required:false
+    },
     categoryStatus:{
         type : Boolean,
         default:1
